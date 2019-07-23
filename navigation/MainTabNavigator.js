@@ -1,76 +1,82 @@
 import React from 'react';
-import { Platform } from 'react-native';
-import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
+import {Platform} from 'react-native';
+import {createStackNavigator, createBottomTabNavigator} from 'react-navigation';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faPizzaSlice, faSearchLocation, faStoreAlt } from '@fortawesome/free-solid-svg-icons';
+import { faDebug} from '@fortawesome/pro-solid-svg-icons';
 
-import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
-import LinksScreen from '../screens/LinksScreen';
+import DiscoverScreen from '../screens/DiscoverScreen';
+import RestaurantScreen from '../screens/RestaurantScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 
 const config = Platform.select({
-  web: { headerMode: 'screen' },
-  default: {},
+    web: {headerMode: 'screen'},
+    default: {},
 });
 
 const HomeStack = createStackNavigator(
-  {
-    Home: HomeScreen,
-  },
-  config
+    {
+        Home: HomeScreen,
+    },
+    config
 );
-
 HomeStack.navigationOptions = {
-  tabBarLabel: 'Home',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
-      }
-    />
-  ),
+    tabBarLabel: 'Order & Rate',
+    tabBarIcon: ({focused}) => (
+        <FontAwesomeIcon icon={ faPizzaSlice } color={focused?"#2f95dc":"#cccccc"} size={20} />
+    ),
 };
-
 HomeStack.path = '';
 
-const LinksStack = createStackNavigator(
-  {
-    Links: LinksScreen,
-  },
-  config
+const DiscoverStack = createStackNavigator(
+    {
+        Discover: DiscoverScreen,
+    },
+    config
 );
-
-LinksStack.navigationOptions = {
-  tabBarLabel: 'Links',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'} />
-  ),
+DiscoverStack.navigationOptions = {
+    tabBarLabel: 'Discover',
+    tabBarIcon: ({focused}) => (
+        <FontAwesomeIcon icon={ faSearchLocation } color={focused?"#5FA3FF":"#a5a5a5"} size={20} />
+    ),
 };
 
-LinksStack.path = '';
+const RestaurantStack = createStackNavigator(
+    {
+        Restaurants: RestaurantScreen,
+    },
+    config
+);
+RestaurantStack.navigationOptions = {
+    tabBarLabel: 'Manage Pizzerias',
+    tabBarIcon: ({focused}) => (
+        <FontAwesomeIcon icon={ faStoreAlt } color={focused?"#5FA3FF":"#a5a5a5"} size={20} />
+    ),
+};
 
+/**
+ * TODO: Remove me before launch
+ */
 const SettingsStack = createStackNavigator(
-  {
-    Settings: SettingsScreen,
-  },
-  config
+    {
+        Settings: SettingsScreen,
+    },
+    config
 );
-
 SettingsStack.navigationOptions = {
-  tabBarLabel: 'Settings',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'} />
-  ),
+    tabBarLabel: 'Debugging',
+    tabBarIcon: ({focused}) => (
+        <FontAwesomeIcon icon={ faDebug } color={focused?"#5FA3FF":"#a5a5a5"} />
+    ),
 };
-
 SettingsStack.path = '';
 
 const tabNavigator = createBottomTabNavigator({
-  HomeStack,
-  LinksStack,
-  SettingsStack,
+    HomeStack,
+    DiscoverStack,
+    RestaurantStack,
+    SettingsStack,
 });
 
 tabNavigator.path = '';
