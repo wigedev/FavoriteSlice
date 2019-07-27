@@ -42,12 +42,7 @@ DiscoverStack.navigationOptions = {
     ),
 };
 
-const RestaurantStack = createStackNavigator(
-    {
-        Restaurants: RestaurantScreen,
-    },
-    config
-);
+const RestaurantStack = RestaurantScreen;
 RestaurantStack.navigationOptions = {
     tabBarLabel: 'Manage Pizzerias',
     tabBarIcon: ({focused}) => (

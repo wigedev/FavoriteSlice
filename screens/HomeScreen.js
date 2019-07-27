@@ -1,6 +1,7 @@
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import {
+    Alert, AsyncStorage, BackHandler, FlatList,
     Image,
     Platform,
     ScrollView,
@@ -10,32 +11,49 @@ import {
 } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faPhone } from '@fortawesome/free-solid-svg-icons';
-import { faStarExclamation } from '@fortawesome/pro-solid-svg-icons';
+import HomePizzeria from "../components/HomePizzeria";
+import CustomButton from "../components/CustomButton";
+import {Toast} from "native-base";
 
-export default function HomeScreen() {
-    return (
-        <View style={styles.container}>
-            <FontAwesomeIcon icon={faPhone} size={40} color={"#000000"}/>
-            <ScrollView
-                style={styles.orderList}
-                contentContainerStyle={styles.contentContainer}>
-                <View>
-                    <Text>
-                        This section of the app will list restaurants based on the most recent ratings. Selecting a
-                        restaurant from this list will pop up a screen with details and ordering information.
-                    </Text>
-                </View>
-            </ScrollView>
-            <View style={styles.ratingPane}>
-                <FontAwesomeIcon icon={faStarExclamation} size={40} color={"#000000"}/>
+class HomeScreen extends React.Component{
+    constructor(inProps) {
+        super(inProps);
+        this.state = {listData: []};
+    }
+
+    render() {
+        let count = 0;
+        return (
+            <View style={styles.container}>
                 <Text>
-                    This section of the app will allow you to rate an ordered pizza from the selected restaurant. This will
-                    include the ability to update information about the properties of the pizza, as well as other relevant notes
-                    about the experience.
+                    Select a restaurant from the list to view ordering information and reviews of your previous orders.
                 </Text>
+                <FlatList
+                    style={styles.pizzeriaList}
+                    data={this.state.listData}
+                    renderItem={({item}) =>
+                        <HomePizzeria name={item.name} type={item.type} rating={item.rating} number={count++} />
+                    }
+                />
             </View>
-        </View>
-    );
+        );
+    }
+
+    componentDidMount() {
+        BackHandler.addEventListener("hardwareBackPress", ()=>{return true;});
+        AsyncStorage.getItem(
+            "pizzerias",
+            function(inError, inPizzerias) {
+                if (inPizzerias === null) {
+                    inPizzerias = [];
+                } else {
+                    inPizzerias = JSON.parse(inPizzerias);
+                }
+                this.setState({listData: inPizzerias});
+                console.log(this.state.listData, inPizzerias);
+            }.bind(this)
+        );
+    }
 }
 
 HomeScreen.navigationOptions = {
@@ -46,17 +64,23 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#ffffff',
-        margin: 5,
+        margin: 0,
         alignItems: 'center'
     },
     contentContainer: {
-        paddingTop: 30,
+        width: '100%',
     },
-    orderList: {
-        flex: 1
+    instructionText: {
+        padding: 10
+    },
+    pizzeriaList: {
+        flex: 1,
+        width: '100%'
     },
     ratingPane: {
         flex: 1,
         alignItems: 'center'
     }
 });
+
+export default HomeScreen;
