@@ -1,7 +1,7 @@
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import {
-    Alert, AsyncStorage, BackHandler, FlatList,
+    Alert, AsyncStorage, BackHandler, DeviceEventEmitter, FlatList,
     Image,
     Platform,
     ScrollView,
@@ -41,6 +41,15 @@ class HomeScreen extends React.Component{
 
     componentDidMount() {
         BackHandler.addEventListener("hardwareBackPress", ()=>{return true;});
+        this.load();
+        this.focusListener = this.props.navigation.addListener('willFocus', payload => {this.load()});
+    }
+
+    componentWillUnmount() {
+        this.focusListener.remove();
+    }
+
+    load = () => {
         AsyncStorage.getItem(
             "pizzerias",
             function(inError, inPizzerias) {
@@ -50,7 +59,6 @@ class HomeScreen extends React.Component{
                     inPizzerias = JSON.parse(inPizzerias);
                 }
                 this.setState({listData: inPizzerias});
-                console.log(this.state.listData, inPizzerias);
             }.bind(this)
         );
     }

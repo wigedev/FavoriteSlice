@@ -18,6 +18,7 @@ import StackNavigator from "react-navigation";
 import {Root, Toast} from "native-base";
 import Constants from "expo-constants";
 import { MonoText } from '../components/StyledText';
+import IconButton from "../components/IconButton";
 
 /**
  * The base listing of pizzerias, which contains a button to add additional pizzerias
@@ -25,7 +26,7 @@ import { MonoText } from '../components/StyledText';
 class ListScreen extends React.Component {
     constructor(inProps) {
         super(inProps);
-        this.state = {listData: []};
+        this.state = {listData: [], refresh: false};
     }
 
     render() {
@@ -38,11 +39,17 @@ class ListScreen extends React.Component {
                     <FlatList
                         style={styles.pizzeriaList}
                         data={this.state.listData}
+                        extraData={this.state.refresh}
                         renderItem={({item}) =>
                             <View style={styles.pizzeriaContainer}>
                                 <Text style={styles.pizzeriaName}>{item.name}</Text>
-                                <CustomButton
-                                    text="Delete"
+                                <IconButton
+                                    type={'edit'}
+                                    onPress={() => {
+                                        Alert.alert("NYI", "This feature is coming soon.");// TODO: This. Yay.
+                                    }} />
+                                <IconButton
+                                    type={'delete'}
                                     onPress={() => {
                                         Alert.alert(
                                             "Please confirm",
@@ -80,7 +87,7 @@ class ListScreen extends React.Component {
                                                                         });
                                                                     }.bind(this)
                                                                 );
-                                                                console.log(this.state.listData, inPizzerias);
+                                                                this.setState({refresh: !this.state.refresh});
                                                             }.bind(this)
                                                         );
                                                     }
@@ -101,6 +108,15 @@ class ListScreen extends React.Component {
 
     componentDidMount() {
         BackHandler.addEventListener("hardwareBackPress", ()=>{return true;});
+        this.load();
+        this.focusListener = this.props.navigation.addListener('willFocus', payload => {this.load()});
+    }
+
+    componentWillUnmount() {
+        this.focusListener.remove();
+    }
+
+    load = () => {
         AsyncStorage.getItem(
             "pizzerias",
             function(inError, inPizzerias) {
@@ -110,7 +126,6 @@ class ListScreen extends React.Component {
                     inPizzerias = JSON.parse(inPizzerias);
                 }
                 this.setState({listData: inPizzerias});
-                console.log(this.state.listData, inPizzerias);
             }.bind(this)
         );
     }
@@ -200,9 +215,9 @@ class AddScreen extends React.Component {
                                                 this.props.navigation.navigate("ListScreen");
                                             }.bind(this)
                                         );
-                                        console.log(this.state.listData, inPizzerias);
                                     }.bind(this)
                                 );
+                                this.setState({refresh: !this.state.refresh});
                             } }
                         />
                     </View>
