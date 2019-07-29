@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {faPizzaSlice, faStar, faStoreAlt} from '@fortawesome/free-solid-svg-icons';
+import {faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
 
 class HomePizzeria extends Component {
     render() {
@@ -14,7 +15,12 @@ class HomePizzeria extends Component {
                 <Text style={styles.text}>
                     {name}
                 </Text>
-                <FontAwesomeIcon style={styles.arrow} icon={ faStar }/>
+                {rating >= 5 ? (<FontAwesomeIcon style={styles.arrow} icon={ faStar }/>):null}
+                {rating >= 4 ? (<FontAwesomeIcon style={styles.arrow} icon={ faStar }/>):null}
+                {rating >= 3 ? (<FontAwesomeIcon style={styles.arrow} icon={ faStar }/>):null}
+                {rating >= 2 ? (<FontAwesomeIcon style={styles.arrow} icon={ faStar }/>):null}
+                {rating >= 1 ? (<FontAwesomeIcon style={styles.arrow} icon={ faStar }/>):null}
+                {rating === 0 ? (<FontAwesomeIcon style={styles.arrow} icon={ faQuestionCircle }/>):null}
             </View>
         );
     }

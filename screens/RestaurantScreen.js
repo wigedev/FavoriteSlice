@@ -38,7 +38,7 @@ class ListScreen extends React.Component {
                     }} />
                     <FlatList
                         style={styles.pizzeriaList}
-                        data={this.state.listData}
+                        data={this.state.listData.sort((a, b) => a.name.localeCompare(b.name))}
                         extraData={this.state.refresh}
                         renderItem={({item}) =>
                             <View style={styles.pizzeriaContainer}>

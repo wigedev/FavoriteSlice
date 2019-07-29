@@ -30,7 +30,7 @@ class HomeScreen extends React.Component{
                 </Text>
                 <FlatList
                     style={styles.pizzeriaList}
-                    data={this.state.listData}
+                    data={this.state.listData.sort((a, b) => b.rating - a.rating)}
                     renderItem={({item}) =>
                         <HomePizzeria name={item.name} type={item.type} rating={item.rating} number={count++} />
                     }
