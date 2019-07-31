@@ -5,7 +5,7 @@ import {Platform, StyleSheet, Text, TextInput, View} from "react-native";
 class CustomTextInput extends Component {
     render() {
         const {
-            label, labelStyle, maxLength, textInputStyle, stateHolder, stateFieldName
+            label, labelStyle, maxLength, textInputStyle, stateHolder, stateFieldName, value
         } = this.props;
         return (
             <View>
@@ -17,7 +17,8 @@ class CustomTextInput extends Component {
                         return obj;
                     }
                 )}
-                style={[styles.textInput, textInputStyle]}
+                    style={[styles.textInput, textInputStyle]}
+                    value={value}
                 />
             </View>
         )
@@ -30,7 +31,8 @@ CustomTextInput.propTypes = {
     maxLength: PropTypes.number,
     textInputStyle: PropTypes.object,
     stateHolder: PropTypes.object.isRequired,
-    stateFieldName: PropTypes.string.isRequired
+    stateFieldName: PropTypes.string.isRequired,
+    value: PropTypes.string
 };
 
 const styles = StyleSheet.create({
@@ -42,11 +44,11 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         ...Platform.select({
             ios: {
-                marginTop : 4,
-                paddingLeft : 10,
-                borderRadius : 8,
-                borderColor : "#c0c0c0",
-                borderWidth : 2
+                marginTop: 4,
+                paddingLeft: 10,
+                borderRadius: 8,
+                borderColor: "#c0c0c0",
+                borderWidth: 2
             },
             android: {}
         })

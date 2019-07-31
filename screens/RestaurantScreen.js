@@ -1,4 +1,3 @@
-import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import CustomButton from "../components/CustomButton";
 import CustomTextInput from "../components/CustomTextInput";
@@ -17,7 +16,6 @@ import {
 import StackNavigator from "react-navigation";
 import {Root, Toast} from "native-base";
 import Constants from "expo-constants";
-import { MonoText } from '../components/StyledText';
 import IconButton from "../components/IconButton";
 
 /**
@@ -46,7 +44,7 @@ class ListScreen extends React.Component {
                                 <IconButton
                                     type={'edit'}
                                     onPress={() => {
-                                        Alert.alert("NYI", "This feature is coming soon.");// TODO: This. Yay.
+                                        this.props.navigation.navigate("AddScreen", item);
                                     }} />
                                 <IconButton
                                     type={'delete'}
@@ -134,15 +132,30 @@ class ListScreen extends React.Component {
 class AddScreen extends React.Component {
     constructor(inProps) {
         super(inProps);
-        this.state = {
-            name: "",
-            type: "",
-            address: "",
-            phone: "",
-            website: "",
-            rating: 0,
-            key: `r_${new Date().getTime()}`
-        };
+        if (typeof inProps.navigation.state.params === "undefined") {
+            this.state = {
+                name: "",
+                type: "",
+                address: "",
+                phone: "",
+                website: "",
+                rating: 0,
+                key: `r_${new Date().getTime()}`,
+                operation: 'add'
+            };
+        } else {
+            let params = inProps.navigation.state.params;
+            this.state = {
+                name: params.name,
+                type: params.type,
+                address: params.address,
+                phone: params.phone,
+                website: params.website,
+                rating: params.rating,
+                key: params.key,
+                operation: 'edit'
+            }
+        }
     }
 
     render() {
@@ -150,7 +163,7 @@ class AddScreen extends React.Component {
             <ScrollView style={styles.addScreenContainer}>
                 <View style={styles.addScreenInnerContainer}>
                     <View style={styles.addScreenFormContainer}>
-                        <CustomTextInput label={"Name"} stateHolder={this} stateFieldName={"name"} maxLength={50} />
+                        <CustomTextInput label={"Name"} stateHolder={this} stateFieldName={"name"} maxLength={50} value={this.state.name} />
                         <Text style={styles.fieldLabel}>Establishment Type</Text>
                         <View style={styles.pickerContainer}>
                             <Picker
@@ -168,9 +181,9 @@ class AddScreen extends React.Component {
                                 <Picker.Item label="Other" value="Other" />
                             </Picker>
                         </View>
-                        <CustomTextInput label={"Address"} stateHolder={this} stateFieldName={"address"} maxLength={100} />
-                        <CustomTextInput label={"Phone"} stateHolder={this} stateFieldName={"phone"} maxLength={20} />
-                        <CustomTextInput label={"Website"} stateHolder={this} stateFieldName={"website"} maxLength={75} />
+                        <CustomTextInput label={"Address"} stateHolder={this} stateFieldName={"address"} maxLength={100} value={this.state.address} />
+                        <CustomTextInput label={"Phone"} stateHolder={this} stateFieldName={"phone"} maxLength={20} value={this.state.phone} />
+                        <CustomTextInput label={"Website"} stateHolder={this} stateFieldName={"website"} maxLength={75} value={this.state.website} />
                         <Text style={styles.fieldLabel}>Rating</Text>
                         <View style={styles.pickerContainer}>
                             <Picker
@@ -204,17 +217,46 @@ class AddScreen extends React.Component {
                             onPress={ () => {
                                 AsyncStorage.getItem("pizzerias",
                                     function(inError, inPizzerias) {
-                                        if (inPizzerias === null) {
-                                            inPizzerias = [ ];
+                                        if (this.state.operation === 'add') {
+                                            // Load the records
+                                            if (inPizzerias === null) {
+                                                inPizzerias = [ ];
+                                            } else {
+                                                inPizzerias = JSON.parse(inPizzerias);
+                                            }
+                                            // Add the new record
+                                            inPizzerias.push(this.state);
+                                            // Save the changes
+                                            AsyncStorage.setItem("pizzerias",
+                                                JSON.stringify(inPizzerias), function() {
+                                                    this.props.navigation.navigate("ListScreen");
+                                                }.bind(this)
+                                            );
                                         } else {
-                                            inPizzerias = JSON.parse(inPizzerias);
+                                            // Load the records
+                                            if (inPizzerias === null) {
+                                                inPizzerias = [ ];
+                                            } else {
+                                                inPizzerias = JSON.parse(inPizzerias);
+                                            }
+                                            // Delete the existing record
+                                            for (let i = 0; i < inPizzerias.length; i++) {
+                                                const restaurant = inPizzerias[i];
+                                                if (restaurant.key === this.state.key) {
+                                                    inPizzerias.splice(i, 1);
+                                                    break;
+                                                }
+                                            }
+                                            // Add the new record
+                                            inPizzerias.push(this.state);
+                                            // Save the changes
+                                            AsyncStorage.setItem("pizzerias",
+                                                JSON.stringify(inPizzerias), function() {
+                                                    this.props.navigation.navigate("ListScreen");
+                                                }.bind(this)
+                                            );
                                         }
-                                        inPizzerias.push(this.state);
-                                        AsyncStorage.setItem("pizzerias",
-                                            JSON.stringify(inPizzerias), function() {
-                                                this.props.navigation.navigate("ListScreen");
-                                            }.bind(this)
-                                        );
+
                                     }.bind(this)
                                 );
                                 this.setState({refresh: !this.state.refresh});

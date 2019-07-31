@@ -3,15 +3,22 @@ import { StyleSheet, Text, View } from 'react-native';
 import PropTypes from "prop-types";
 
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import {faPizzaSlice, faStar, faStoreAlt} from '@fortawesome/free-solid-svg-icons';
+import {faPizzaSlice, faQuestion, faStar, faStoreAlt, faTruck} from '@fortawesome/free-solid-svg-icons';
 import {faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
 
 class HomePizzeria extends Component {
+    getRestaurantIcon(type) {
+        if (type === 'Pizzeria') return faPizzaSlice;
+        if (type === 'Italian Restaurant') return faStoreAlt;
+        if (type === 'Food Truck') return faTruck;
+        return faQuestion;
+    }
+
     render() {
         const {number, type, name, rating} = this.props;
         return (
             <View style={[styles.row, (number%2===0)?styles.evenRow:styles.oddRow]}>
-                <FontAwesomeIcon style={styles.fontIcon} icon={(type==='Pizzeria')?faPizzaSlice:faStoreAlt} />
+                <FontAwesomeIcon style={styles.fontIcon} icon={this.getRestaurantIcon(type)} />
                 <Text style={styles.text}>
                     {name}
                 </Text>

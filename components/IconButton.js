@@ -10,7 +10,7 @@ class IconButton extends Component {
         return (
             <TouchableOpacity
                 style={ [
-                    { padding : 10, height : 60, borderRadius : 8, margin : 10,
+                    { padding : 10, height : 50, borderRadius : 8, margin : 10,
                         width : width,
                         backgroundColor :
                             disabled != null && disabled === "true" ? "#e0e0e0" : "#303656",
