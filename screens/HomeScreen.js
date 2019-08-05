@@ -32,7 +32,7 @@ class HomeScreen extends React.Component{
                     style={styles.pizzeriaList}
                     data={this.state.listData.sort((a, b) => b.rating - a.rating)}
                     renderItem={({item}) =>
-                        <HomePizzeria name={item.name} type={item.type} rating={item.rating} number={count++} />
+                        <HomePizzeria name={item.name} type={item.type} rating={item.rating} phone={item.phone} website={item.website} number={count++} itemKey={item.key} />
                     }
                 />
             </View>
