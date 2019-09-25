@@ -29,18 +29,18 @@ HomeStack.navigationOptions = {
 };
 HomeStack.path = '';
 
-const DiscoverStack = createStackNavigator(
-    {
-        Discover: DiscoverScreen,
-    },
-    config
-);
-DiscoverStack.navigationOptions = {
-    tabBarLabel: 'Discover',
-    tabBarIcon: ({focused}) => (
-        <FontAwesomeIcon icon={ faSearchLocation } color={focused?"#5FA3FF":"#a5a5a5"} size={20} />
-    ),
-};
+// const DiscoverStack = createStackNavigator(
+//     {
+//         Discover: DiscoverScreen,
+//     },
+//     config
+// );
+// DiscoverStack.navigationOptions = {
+//     tabBarLabel: 'Discover',
+//     tabBarIcon: ({focused}) => (
+//         <FontAwesomeIcon icon={ faSearchLocation } color={focused?"#5FA3FF":"#a5a5a5"} size={20} />
+//     ),
+// };
 
 const RestaurantStack = RestaurantScreen;
 RestaurantStack.navigationOptions = {
@@ -53,25 +53,25 @@ RestaurantStack.navigationOptions = {
 /**
  * TODO: Remove me before launch
  */
-const SettingsStack = createStackNavigator(
-    {
-        Settings: SettingsScreen,
-    },
-    config
-);
-SettingsStack.navigationOptions = {
-    tabBarLabel: 'Debugging',
-    tabBarIcon: ({focused}) => (
-        <FontAwesomeIcon icon={ faDebug } color={focused?"#5FA3FF":"#a5a5a5"} />
-    ),
-};
-SettingsStack.path = '';
+// const SettingsStack = createStackNavigator(
+//     {
+//         Settings: SettingsScreen,
+//     },
+//     config
+// );
+// SettingsStack.navigationOptions = {
+//     tabBarLabel: 'Debugging',
+//     tabBarIcon: ({focused}) => (
+//         <FontAwesomeIcon icon={ faDebug } color={focused?"#5FA3FF":"#a5a5a5"} />
+//     ),
+// };
+// SettingsStack.path = '';
 
 const tabNavigator = createBottomTabNavigator({
     HomeStack,
-    DiscoverStack,
+    //DiscoverStack,
     RestaurantStack,
-    SettingsStack,
+    //SettingsStack,
 });
 
 tabNavigator.path = '';
